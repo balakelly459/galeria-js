@@ -1,21 +1,74 @@
 "use strict"
 
-const imagens = [
-    "./img/img1.jpg",
-    "./img/img2.jpg",
-    "./img/img3.jpg",
-    "./img/img4.jpg",
-    "./img/img5.jpg",
-    "./img/img6.jpg",
-    "./img/img7.jpg",
-    "./img/img8.png"
-]
+// const alunos = ['Ana', 'Hugo', 'Marta']
+// const notas = [9, 10, 7]
 
-const limparId = (urlImagem) => urlImagem
-.split("/")[2]
-.split(".")[0]
-.replace(" ", "-")
-.toLowerCase()
+// const aluno1 = {
+//     'nome' : 'Ana',
+//     'nota' : 9
+// }
+
+// aluno1.nota
+
+// const alunosDS = [
+//     {'nome': 'Ana', 'nota' : 9},
+//     {'nome': 'Hugo', 'nota' : 10},
+//     {'nome': 'Marta', 'Nota' : 7}
+// ]
+
+// alunosDS[1].nota
+// const aluno2 = {
+//     'nome': 'João',
+//     'notas': [9,5,6,4]
+// }
+
+// aluno2.notas[2]
+
+// const imagens = { 
+//     'url' : [
+//     "./img/img1.jpg",
+//     "./img/img2.jpg",
+//     "./img/img3.jpg",
+//     "./img/img4.jpg",
+//     "./img/img5.jpg",
+//     "./img/img6.jpg",
+//     "./img/img7.jpg",
+//     "./img/img8.png"
+// ]
+// }
+
+const limpar = (elemento) => {
+    while (elemento.firstChild) {
+        elemento.removeChild(elemento.lastChild)
+    }
+}
+
+const pegarImagens = (raca) => fetch(`https://dog.ceo/api/breed/${raca}/images`)
+
+const procurarImagens = async (evento) => {
+
+    if (evento.key === 'Enter') {
+    const raca = evento.target.value
+    const imagensResponse = await pegarImagens(raca)
+    const imagens = await imagensResponse.json()
+
+    limpar(document.querySelector(".galeria-container"))
+    limpar(document.querySelector(".slide-container"))
+    carregarImagens(imagens.message)
+    carregarSlides(imagens.message)
+}
+}
+
+const limparId = (urlImagem) => {
+    const posBarra = urlImagem.lastIndexOf('/') + 1
+    const posPonto = urlImagem.lastIndexOf('.')
+    return urlImagem.substring(posBarra, posPonto)
+}
+// urlImagem
+// .split("/")[2]
+// .split(".")[0]
+// .replace(" ", "-")
+// .toLowerCase()
 
 const criarItem = (urlImagem) => {
     const container = document.querySelector(".galeria-container")
@@ -26,7 +79,7 @@ const criarItem = (urlImagem) => {
     container.appendChild(novoLink)
 }
 
-const carregarImagens = () => imagens.forEach(criarItem)
+const carregarImagens = (imagens) => imagens.forEach(criarItem)
 
 const criarSlide = (urlImagem, indice, arr) => {
     const container = document.querySelector(".slide-container")
@@ -59,8 +112,8 @@ const criarSlide = (urlImagem, indice, arr) => {
     container.appendChild(slide)
 }
 
-const carregarSlides = () => imagens.forEach(criarSlide)
+const carregarSlides = (imagens) => imagens.forEach(criarSlide)
 
-carregarImagens()
 
-carregarSlides()
+document.querySelector(".pesquisa-container input")
+.addEventListener('keypress', procurarImagens)
